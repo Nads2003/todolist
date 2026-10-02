@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import TodoItem from "./components/TodoItem";
+import { Construction } from "lucide-react";
 
 type Priority = 'Urgent' | 'Moyenne' | 'Basse';
 
@@ -7,8 +9,6 @@ type Todo = {
   text: string;
   priority: Priority;
 };
-
-
 
 function App() {
   const [inputValue, setInputValue] = useState('');
@@ -43,6 +43,16 @@ function App() {
   } else {
     filteredTodos = todos.filter((todo) => todo.priority === filter);
   }
+  
+  const urgentCount = todos.filter((todo) => todo.priority === 'Urgent').length;
+  const moyenneCount = todos.filter((todo) => todo.priority === 'Moyenne').length;
+  const basseCount = todos.filter((todo) => todo.priority === 'Basse').length;  
+  const totalCount = todos.length;
+
+  function handleDeleteTodo(id: number) {
+    const updatedTodos = todos.filter((todo) => todo.id !== id);
+    setTodos(updatedTodos);
+  }
   return (
     <div className="flex justify-center">
        <div className="w-1/2 flex flex-col gap-4 my-15 bg-base-300 ps-5 rounded-2xl">
@@ -64,24 +74,34 @@ function App() {
          <div className="space-y flex-1 h-fit">
           <div className="flex flex-wrap gap-4">
             <button className={`btn btn-soft ${filter ==="Tous" ? "btn-primary" : ""}`} onClick={() => setFilter('Tous') }>
-              Tous
+              Tous({totalCount})
             </button>
-
+            <button className={`btn btn-soft ${filter ==="Urgent" ? "btn-primary" : ""}`} onClick={() => setFilter('Urgent') }>
+              Urgent({urgentCount})
+            </button>
+            <button className={`btn btn-soft ${filter ==="Moyenne" ? "btn-primary" : ""}`} onClick={() => setFilter('Moyenne') }>
+              Moyenne({moyenneCount})
+            </button>
+            <button className={`btn btn-soft ${filter ==="Basse" ? "btn-primary" : ""}`} onClick={() => setFilter('Basse') }>
+              Basse({basseCount})
+            </button>
           </div>
          </div>
          {filteredTodos.length > 0 ? (
           <ul className="divide-y divide-primary/20">
             {filteredTodos.map((todo) => (
-              <li key={todo.id} className="flex justify-between items-center gap-4 bg-base-100 p-4 rounded-lg">
-                <span>{todo.text}</span>
-                <span className={`badge ${todo.priority === 'Urgent' ? 'badge-error' : todo.priority === 'Moyenne' ? 'badge-warning' : 'badge-success'}`}>
-                  {todo.priority}
-                </span>
+              <li key={todo.id} >
+                <TodoItem todo={todo} handleDeleteTodo={handleDeleteTodo}  />
               </li>
             ))}
           </ul>
         ) : (
-          <p>Aucune tâche à afficher.</p>
+          <div className="flex justify-center items-center flex-col p-5">
+            <div>
+              <Construction className="w-12 h-12 text-primary" />
+            </div>
+            <p>Aucune tâche à afficher.</p>
+          </div>
         )}
 
         </div>
