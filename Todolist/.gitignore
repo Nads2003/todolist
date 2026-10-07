@@ -12,6 +12,18 @@ dist
 dist-ssr
 *.local
 
+# Variables d'environnement
+.env
+.env.*
+!.env.example
+
+# Build / outils
+*.tsbuildinfo
+coverage
+
+# Docker local
+docker-compose.override.yml
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
